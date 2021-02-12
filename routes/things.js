@@ -17,8 +17,10 @@ api.get('/', (req, res) => {
 })
 
 api.post('/', (req, res) => {
-  const { name } = req.body;
-  const id = v4();
+
+  if (!req.body.name) {
+    res.status(400).send('field name is required');
+  }
 
   fs.readFile(pathToThings, 'utf8', (err, data) => {
     if (err) {
@@ -27,8 +29,8 @@ api.post('/', (req, res) => {
 
     const dataObject = JSON.parse(data);
     dataObject.push({
-      id,
-      name
+      ...req.body,
+      id: v4()
     });
 
     fs.writeFile(pathToThings, JSON.stringify(dataObject), 'utf8', (err) => {
@@ -55,7 +57,7 @@ api.put('/:id', (req, res) => {
     if (thingIndex === -1) {
       res.send('Thing is not exist');
     } else {
-      jsonData[thingIndex]['name'] = req.body.name;
+      jsonData[thingIndex] = Object.assign(jsonData[thingIndex], req.body, { id });
 
 
       fs.writeFile(pathToThings, JSON.stringify(jsonData), 'utf8', (err) => {
