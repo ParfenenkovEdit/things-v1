@@ -2,7 +2,7 @@ const { v4 } = require('uuid');
 const { Router } = require('express');
 const fs = require('fs');
 
-const pathToThings = process.env.pathToThings;
+const pathToThings = './services/things.json';
 
 const api = Router();
 
