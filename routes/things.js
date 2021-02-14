@@ -17,9 +17,9 @@ api.get('/', (req, res) => {
 })
 
 api.post('/', (req, res) => {
-  console.log(req.body, req.body.name);
   if (!req.body || !req.body.name) {
     res.status(400).send('field name is required');
+    return;
   }
 
   fs.readFile(pathToThings, 'utf8', (err, data) => {
@@ -56,6 +56,7 @@ api.put('/:id', (req, res) => {
 
     if (thingIndex === -1) {
       res.send('Thing is not exist');
+      return;
     } else {
       const updatedObject = Object.assign(jsonData[thingIndex], req.body, { id });
       jsonData[thingIndex] = updatedObject;
@@ -85,6 +86,7 @@ api.delete('/:id', (req, res) => {
 
     if (thingIndex === -1) {
       res.send('Thing is not exist');
+      return;
     } else {
 
       jsonData.splice([thingIndex], 1);
