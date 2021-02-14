@@ -26,19 +26,19 @@ api.post('/', (req, res) => {
     if (err) {
       throw err;
     }
-
-    const dataObject = JSON.parse(data);
-    dataObject.push({
+    const objectFromRequest = {
       ...req.body,
       id: v4()
-    });
+    };
+    const dataObject = JSON.parse(data);
+    dataObject.push(objectFromRequest);
 
     fs.writeFile(pathToThings, JSON.stringify(dataObject), 'utf8', (err) => {
       if (err) {
         throw err;
       }
 
-      res.status(201).send('Thing was added into file');
+      res.status(201).json(objectFromRequest);
     })
   });
 });
@@ -57,7 +57,8 @@ api.put('/:id', (req, res) => {
     if (thingIndex === -1) {
       res.send('Thing is not exist');
     } else {
-      jsonData[thingIndex] = Object.assign(jsonData[thingIndex], req.body, { id });
+      const updatedObject = Object.assign(jsonData[thingIndex], req.body, { id });
+      jsonData[thingIndex] = updatedObject;
 
 
       fs.writeFile(pathToThings, JSON.stringify(jsonData), 'utf8', (err) => {
@@ -65,7 +66,7 @@ api.put('/:id', (req, res) => {
           throw err;
         }
 
-        res.status(201).send('Thing was update');
+        res.status(201).json(updatedObject);
       })
     }
   });
@@ -93,7 +94,7 @@ api.delete('/:id', (req, res) => {
           throw err;
         }
 
-        res.status(200).send('Thing was delete');
+        res.status(200).json(thingIndex);
       })
     }
   });
