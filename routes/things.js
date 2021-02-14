@@ -17,8 +17,8 @@ api.get('/', (req, res) => {
 })
 
 api.post('/', (req, res) => {
-
-  if (!req.body.name) {
+  console.log(req.body, req.body.name);
+  if (!req.body || !req.body.name) {
     res.status(400).send('field name is required');
   }
 
@@ -38,7 +38,7 @@ api.post('/', (req, res) => {
         throw err;
       }
 
-      res.status(201).json(objectFromRequest);
+      res.json(objectFromRequest);
     })
   });
 });
